@@ -82,6 +82,10 @@ const App = () => {
         );
     };
 
+    const onModalClose = () => {
+        setIsOpenModal(false);
+    };
+
     const setComments = () => {};
 
     if (isLoading) {
@@ -93,7 +97,7 @@ const App = () => {
             <h1 className="App-title">TEST APP</h1>
             <main className="App-content">{getImageCards(data)}</main>
             {isOpenModal && (
-                <Modal>
+                <Modal onClose={onModalClose}>
                     <div className="modal-form">
                         <div className="left-side">
                             <Card
@@ -128,10 +132,6 @@ const App = () => {
                     </div>
                 </Modal>
             )}
-            {/* <Button value="Оставить комментарий" onClick={setComments} /> */}
-            {/* <Input type="text" placeholder="Ваше имя" onChange={inputChangeHandler} /> */}
-            {/* <Input type="text" placeholder="Ваш комментарий" onChange={inputChangeHandler} /> */}
-
             <footer className="App-footer">
                 <h5 className="App-footer-title">© 2018-{getNowYear()}</h5>
             </footer>
