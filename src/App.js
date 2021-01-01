@@ -32,8 +32,8 @@ const App = () => {
 
     const clickImageHandler = async (ev) => {
         const id = parseInt(ev.target.dataset.id, 10);
+        setIsLoading(true);
         await fetchImageData(id);
-        console.log(true);
     };
 
     const fetchImageData = async (id) => {
@@ -45,6 +45,8 @@ const App = () => {
             console.log(data);
         } catch (e) {
             console.error(e);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -54,8 +56,30 @@ const App = () => {
         });
     };
 
-    const inputChangeHandler = (ev) => {
+    const inputChangeHandler = (ev, type) => {
         console.log(ev.target.value);
+    };
+
+    const getFormattedDate = (timestamp) => {
+        console.log();
+        const day =
+            new Date(timestamp).getDate() < 10
+                ? `0${new Date(timestamp).getDate()}`
+                : new Date(timestamp).getDate();
+        const initMonth = new Date(timestamp).getMonth() + 1;
+        const month = initMonth < 10 ? `0${initMonth}` : initMonth;
+        const year = new Date(timestamp).getFullYear();
+
+        return `${day}.${month}.${year}`;
+    };
+
+    const getCommentTemplate = ({ key, date, comment }) => {
+        return (
+            <div key={key} className="comment-content">
+                <span className="comment-date">{getFormattedDate(date)}</span>
+                <span className="comment">{comment}</span>
+            </div>
+        );
     };
 
     const setComments = () => {};
@@ -68,10 +92,45 @@ const App = () => {
         <div className="App">
             <h1 className="App-title">TEST APP</h1>
             <main className="App-content">{getImageCards(data)}</main>
-            {isOpenModal ? <Modal>Hello</Modal> : null}
+            {isOpenModal && (
+                <Modal>
+                    <div className="modal-form">
+                        <div className="left-side">
+                            <Card
+                                mode={MODE.DISPLAY}
+                                id={imageData.id}
+                                url={imageData.url}
+                                className="modal-image"
+                            />
+                            <Input
+                                type="text"
+                                placeholder="Ваше имя"
+                                onChange={inputChangeHandler}
+                                style={{ marginTop: '30px' }}
+                            />
+                            <Input
+                                type="text"
+                                placeholder="Ваш комментарий"
+                                onChange={inputChangeHandler}
+                                style={{ marginTop: '20px' }}
+                            />
+                            <Button
+                                value="Оставить комментарий"
+                                onClick={setComments}
+                                style={{ marginTop: '20px' }}
+                            />
+                        </div>
+                        <div className="right-side">
+                            {imageData.comments.map(({ id: key, date, text: comment }) => {
+                                return getCommentTemplate({ key, date, comment });
+                            })}
+                        </div>
+                    </div>
+                </Modal>
+            )}
             {/* <Button value="Оставить комментарий" onClick={setComments} /> */}
-            {/* <Input type="text" placeholder="Ваше имя" onChange={inputChangeHandler} />
-            <Input type="text" placeholder="Ваш комментарий" onChange={inputChangeHandler} /> */}
+            {/* <Input type="text" placeholder="Ваше имя" onChange={inputChangeHandler} /> */}
+            {/* <Input type="text" placeholder="Ваш комментарий" onChange={inputChangeHandler} /> */}
 
             <footer className="App-footer">
                 <h5 className="App-footer-title">© 2018-{getNowYear()}</h5>

@@ -46,3 +46,25 @@
     font-weight: normal;
     color: #ccc;
 }
+
+.comment-date,
+.comment {
+    font-size: 13px;
+    line-height: 15px;
+}
+
+.comment-date {
+    text-align: left;
+    color: #999999;
+}
+
+.comment-content {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.comment {
+    margin-top: 5px;
+    color: #000;
+}
