@@ -12,3 +12,8 @@
     font-size: 13px;
     font-weight: normal;
 }
+
+.Button-base:disabled {
+    cursor: not-allowed;
+    background-color: rgba(73, 151, 208, 0.6);
+}

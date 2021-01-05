@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Card, Button, Modal, Input } from './components';
-import { MODE } from './constants';
+import { MODE, TYPES_MSG } from './constants';
 import './App.css';
 
 const App = () => {
@@ -9,6 +9,13 @@ const App = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [imageData, setImageData] = useState({});
     const [isOpenModal, setIsOpenModal] = useState(false);
+    const [comment, setComment] = useState('');
+    const [userName, setUserName] = useState('');
+    const modalRef = useRef(null);
+    const [inputValues, setInputValues] = useState({
+        [TYPES_MSG.COMMENT]: '',
+        [TYPES_MSG.NAME]: '',
+    });
 
     useEffect(() => {
         fetchImages();
@@ -42,7 +49,6 @@ const App = () => {
             const data = await response.json();
             setImageData(data);
             setIsOpenModal(true);
-            console.log(data);
         } catch (e) {
             console.error(e);
         } finally {
@@ -57,11 +63,11 @@ const App = () => {
     };
 
     const inputChangeHandler = (ev, type) => {
-        console.log(ev.target.value);
+        console.log(ev.target.value, type);
+        setInputValues({ ...inputValues, [type]: ev.target.value });
     };
 
     const getFormattedDate = (timestamp) => {
-        console.log();
         const day =
             new Date(timestamp).getDate() < 10
                 ? `0${new Date(timestamp).getDate()}`
@@ -84,9 +90,18 @@ const App = () => {
 
     const onModalClose = () => {
         setIsOpenModal(false);
+        setUserName('');
+        setComment('');
+        setInputValues({ [TYPES_MSG.NAME]: '', [TYPES_MSG.COMMENT]: '' });
     };
 
-    const setComments = () => {};
+    const setComments = async () => {
+        const response = await fetch(`${url}/${imageData.id}`, {
+            method: 'POST',
+            body: JSON.stringify({ comments: inputValues[TYPES_MSG.COMMENT] }),
+        });
+        console.log(response);
+    };
 
     if (isLoading) {
         return null;
@@ -97,37 +112,45 @@ const App = () => {
             <h1 className="App-title">TEST APP</h1>
             <main className="App-content">{getImageCards(data)}</main>
             {isOpenModal && (
-                <Modal onClose={onModalClose}>
+                <Modal ref={modalRef} onClose={onModalClose}>
                     <div className="modal-form">
+                        <div className="modal-inner">
+                            <div className="left-side">
+                                <Card
+                                    mode={MODE.DISPLAY}
+                                    id={imageData.id}
+                                    url={imageData.url}
+                                    className="modal-image"
+                                />
+                            </div>
+                            <div className="right-side">
+                                {imageData.comments.map(({ id: key, date, text: comment }) => {
+                                    return getCommentTemplate({ key, date, comment });
+                                })}
+                            </div>
+                        </div>
                         <div className="left-side">
-                            <Card
-                                mode={MODE.DISPLAY}
-                                id={imageData.id}
-                                url={imageData.url}
-                                className="modal-image"
-                            />
                             <Input
                                 type="text"
                                 placeholder="Ваше имя"
-                                onChange={inputChangeHandler}
+                                onChange={(ev) => inputChangeHandler(ev, TYPES_MSG.NAME)}
                                 style={{ marginTop: '30px' }}
                             />
                             <Input
                                 type="text"
                                 placeholder="Ваш комментарий"
-                                onChange={inputChangeHandler}
+                                onChange={(ev) => inputChangeHandler(ev, TYPES_MSG.COMMENT)}
                                 style={{ marginTop: '20px' }}
                             />
                             <Button
                                 value="Оставить комментарий"
                                 onClick={setComments}
                                 style={{ marginTop: '20px' }}
+                                disabled={
+                                    !inputValues[TYPES_MSG.NAME].length &&
+                                    !inputValues[TYPES_MSG.COMMENT].length
+                                }
                             />
-                        </div>
-                        <div className="right-side">
-                            {imageData.comments.map(({ id: key, date, text: comment }) => {
-                                return getCommentTemplate({ key, date, comment });
-                            })}
                         </div>
                     </div>
                 </Modal>

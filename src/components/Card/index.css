@@ -8,3 +8,10 @@
 .Card-image {
     cursor: pointer;
 }
+
+@media screen and (max-width: 320px) {
+    .Card-image {
+        width: 280px;
+        height: 170px;
+    }
+}

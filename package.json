@@ -52,6 +52,6 @@
     }
   },
   "lint-staged": {
-    "*.{js,jsx,css}": "yarn lint"
+    "*.{js,jsx,css}": "npm run lint"
   }
 }

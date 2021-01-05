@@ -17,6 +17,7 @@
 }
 
 .App-title {
+    font-size: 36px;
     font-weight: normal;
     text-align: center;
 }
@@ -68,4 +69,21 @@
 .comment {
     margin-top: 5px;
     color: #000;
+}
+
+@media screen and (max-width: 320px) {
+    .App-content {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .App-footer {
+        position: relative;
+        margin-top: 100px;
+        width: auto;
+        bottom: 0;
+    }
+
+    .comment {
+        text-align: left;
+    }
 }

@@ -1,13 +1,24 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import './index.css';
 
-export const Modal = ({ children, onClose }) => {
+const ModalWindow = ({ children, onClose, forwardRef }) => {
     return (
-        <div className="modal">
-            <div className="modal-content">
-                <div className="modal-cross" onClick={onClose}></div>
-                {children}
+        <>
+            <div className="modal-background" onClick={onClose}></div>
+            <div ref={forwardRef} className="modal">
+                <div className="modal-content">
+                    <div className="modal-cross" onClick={onClose}></div>
+                    {children}
+                </div>
             </div>
-        </div>
+        </>
     );
 };
+
+export const Modal = forwardRef(({ children, ...rest }, ref) => {
+    return (
+        <ModalWindow forwardRef={ref} {...rest}>
+            {children}
+        </ModalWindow>
+    );
+});
