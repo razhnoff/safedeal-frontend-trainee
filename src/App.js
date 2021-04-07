@@ -39,7 +39,6 @@ const App = () => {
 
     const clickImageHandler = async (ev) => {
         const id = parseInt(ev.target.dataset.id, 10);
-        setIsLoading(true);
         await fetchImageData(id);
     };
 
@@ -96,9 +95,12 @@ const App = () => {
     };
 
     const setComments = async () => {
-        const response = await fetch(`${url}/${imageData.id}`, {
+        const response = await fetch(`${url}/${imageData.id}/comments`, {
             method: 'POST',
-            body: JSON.stringify({ comments: inputValues[TYPES_MSG.COMMENT] }),
+            body: JSON.stringify({
+                name: inputValues[TYPES_MSG.NAME],
+                comment: inputValues[TYPES_MSG.COMMENT],
+            }),
         });
         console.log(response);
     };

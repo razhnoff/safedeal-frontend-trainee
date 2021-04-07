@@ -51,7 +51,7 @@
     content: ' ';
     height: 25px;
     width: 2px;
-    background-color: #333;
+    background-color: #000;
 }
 .modal-cross:before {
     transform: rotate(45deg);
