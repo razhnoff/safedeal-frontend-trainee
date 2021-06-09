@@ -1,3 +1,5 @@
+[View Photos modal page](https://razhnoff.github.io/safedeal-frontend-trainee/ "Photos page")
+
 ## Задание
 ​
 
